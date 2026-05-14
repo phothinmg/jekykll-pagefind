@@ -21,5 +21,5 @@ Gem::Specification.new do |spec|
     Dir["README.md", "LICENSE.txt", "lib/**/*", "jekyll-foo.gemspec"]
   end
   spec.require_paths = ["lib"]
-  spec.add_dependency "jekyll", "~> 3.10"
+  spec.add_dependency "jekyll", "~> 4.4"
 end

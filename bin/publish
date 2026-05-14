@@ -4,3 +4,5 @@ set -euo pipefail
 read -p "Enter version: " version
 
 gem push jekyll-pagefind-"$version".gem
+
+rm -rf jekyll-pagefind-"$version".gem

@@ -14,8 +14,8 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata["source_code_uri"] = "https://github.com/phothinmg/jekykll-pagefind"
+  spec.metadata["changelog_uri"] = "https://github.com/phothinmg/jekykll-pagefind/blob/main/CHANGELOG.md"
 
   spec.files = Dir.chdir(__dir__) do
     Dir["README.md", "LICENSE.txt", "lib/**/*", "jekyll-foo.gemspec"]

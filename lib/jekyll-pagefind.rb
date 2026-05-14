@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "pagefind/version"
+require_relative "jekyll/pagefind/version"
 
 module Jekyll
   module Pagefind

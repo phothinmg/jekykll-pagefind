@@ -1,13 +1,13 @@
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD041 -->
 <p align="center">
-<img src="./rubygems_logo.png" width="160" height="160" alt="mmdevs" style="border-radius:50%" />
+<img src="https://github.com/phothinmg/jekykll-pagefind/blob/main/rubygems_logo.png" width="160" height="160" alt="mmdevs" style="border-radius:50%" />
 </p>
 <h1 align="center">Jekyll::Pagefind</h1>
 
 ## Overview
 
-Jekyll-Pagefind plugin for my personal/projects sites.Inspired by [Adding search to Jekyll using pagefind][pf_to_jekyll].It can easily follow default Jekyll action workflow deploy to Github Pages.
+Jekyll-Pagefind is a plugin I use for my personal and project sites. It was inspired by [Adding search to Jekyll using pagefind][pf_to_jekyll]. It fits easily into the default Jekyll GitHub Actions workflow for deploying to GitHub Pages.
 
 ## Install
 
@@ -38,20 +38,20 @@ gem install jekyll-pagefind
 
 ## How to
 
-This guid is only Jekyll site that deploy to Github Pages.
+This guide is intended for Jekyll sites deployed to GitHub Pages.
 
 ### Download pagefind
 
 First, download the standalone binary (`pagefind`) from the [pagefind releases][pf_release_page] page.
 
-Make sure for :
+Make sure to use the correct binary:
 
-1. For local development download the standalone binary (`pagefind`) for your host platform.
-2. For deploy to Github Pages binary must be `pagefind-v{version}-x86_64-unknown-linux-musl.tar.gz`.
+1. For local development, download the standalone binary (`pagefind`) for your host platform.
+2. For deployment to GitHub Pages, the binary must be `pagefind-v{version}-x86_64-unknown-linux-musl.tar.gz`.
 
 ### Place the binary file `pagefind`
 
-Place the binary file `pagefind` in root of your jekyll project(recommended this default config) or somewhere under root of project.
+Place the `pagefind` binary in the root of your Jekyll project, which is the recommended default, or anywhere else under the project root.
 
 ### Jekyll Config
 
@@ -63,7 +63,7 @@ plugins:
   - jekyll-pagefind
 ```
 
-If your binary (`pagefind`) is not at the root of your project, need one config option.
+If your `pagefind` binary is not in the project root, add this configuration option:
 
 ```yaml
 pagefind: path_to_your/pagefind # where your `pagefind` was located

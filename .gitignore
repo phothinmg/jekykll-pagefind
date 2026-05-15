@@ -9,3 +9,4 @@
 ptm
 vendor/bundle/
 .bundle/
+Gemfile.lock

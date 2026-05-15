@@ -6,3 +6,7 @@ Style/StringLiterals:
 
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
+# snake_case file name exclusions
+Naming/FileName:
+  Enabled: true
+  Exclude: ["lib/jekyll-pagefind.rb"]

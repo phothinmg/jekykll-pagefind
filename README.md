@@ -5,6 +5,8 @@
 </p>
 <h1 align="center">Jekyll::Pagefind</h1>
 
+[![Gem Version](https://badge.fury.io/rb/jekyll-pagefind.svg?icon=si%3Arubygems)](https://badge.fury.io/rb/jekyll-pagefind)
+
 ## Overview
 
 Jekyll-Pagefind is a plugin I use for my personal and project sites. It was inspired by [Adding search to Jekyll using pagefind][pf_to_jekyll]. It fits easily into the default Jekyll GitHub Actions workflow for deploying to GitHub Pages.

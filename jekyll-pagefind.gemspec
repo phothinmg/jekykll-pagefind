@@ -18,8 +18,9 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"] = "https://github.com/phothinmg/jekykll-pagefind/blob/main/CHANGELOG.md"
 
   spec.files = Dir.chdir(__dir__) do
-    Dir["README.md", "LICENSE.txt", "lib/**/*", "jekyll-foo.gemspec"]
+    Dir["README.md", "LICENSE.txt", "lib/**/*", "assets/**/*", "jekyll-pagefind.gemspec"]
   end
   spec.require_paths = ["lib"]
   spec.add_dependency "jekyll", "~> 4.4"
+  spec.add_dependency "open3", "~> 0.2.1"
 end

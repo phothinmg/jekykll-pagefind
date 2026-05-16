@@ -9,4 +9,4 @@ Style/StringLiteralsInInterpolation:
 # snake_case file name exclusions
 Naming/FileName:
   Enabled: true
-  Exclude: ["lib/jekyll-pagefind.rb"]
+  Exclude: ["lib/**/*"]

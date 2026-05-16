@@ -10,3 +10,4 @@ ptm
 vendor/bundle/
 .bundle/
 Gemfile.lock
+notes.txt

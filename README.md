@@ -1,15 +1,15 @@
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD041 -->
 <p align="center">
-<img src="https://github.com/phothinmg/jekykll-pagefind/blob/main/rubygems_logo.png" width="160" height="160" alt="mmdevs" style="border-radius:50%" />
+<img src="https://susee.phothin.dev/logo/rubygems_logo.png" width="160" height="160" alt="mmdevs" style="border-radius:50%" />
 </p>
-<h1 align="center">Jekyll::Pagefind</h1>
+<h1 align="center">jekyll-pagefind</h1>
 
 [![Gem Version](https://badge.fury.io/rb/jekyll-pagefind.svg?icon=si%3Arubygems)](https://badge.fury.io/rb/jekyll-pagefind)
 
 ## Overview
 
-Jekyll-Pagefind is a plugin I use for my personal and project sites. It was inspired by [Adding search to Jekyll using pagefind][pf_to_jekyll]. It fits easily into the default Jekyll GitHub Actions workflow for deploying to GitHub Pages.
+Jekyll-Pagefind is a plugin that running pagefind binary in jekyll site.
 
 ## Install
 
@@ -17,10 +17,6 @@ Install the gem and add to the application's Gemfile by executing:
 
 ```sh
 bundle add jekyll-pagefind
-```
-
-```sh
-bundle install
 ```
 
 In `Gemfile`
@@ -32,30 +28,19 @@ group :jekyll_plugins do
 end
 ```
 
+```sh
+bundle install
+```
+
 If bundler is not being used to manage dependencies, install the gem by executing:
 
 ```sh
 gem install jekyll-pagefind
 ```
 
-## How to
+## Use
 
-This guide is intended for Jekyll sites deployed to GitHub Pages.
-
-### Download pagefind
-
-First, download the standalone binary (`pagefind`) from the [pagefind releases][pf_release_page] page.
-
-Make sure to use the correct binary:
-
-1. For local development, download the standalone binary (`pagefind`) for your host platform.
-2. For deployment to GitHub Pages, the binary must be `pagefind-v{version}-x86_64-unknown-linux-musl.tar.gz`.
-
-### Place the binary file `pagefind`
-
-Place the `pagefind` binary in the root of your Jekyll project, which is the recommended default, or anywhere else under the project root.
-
-### Jekyll Config
+### Jekyll site configuration
 
 **`_config.yml`**
 
@@ -63,19 +48,135 @@ Place the `pagefind` binary in the root of your Jekyll project, which is the rec
 plugins:
   # other plugin
   - jekyll-pagefind
+# other config
+# Optional Jekyll Pagefind Options
+jekyll_pagefind:
+  output_subdir: pagefind
 ```
 
-If your `pagefind` binary is not in the project root, add this configuration option:
+---
+
+### Jekyll Pagefind options(optional)
+
+These options act as options in [Pagefind Config files](https://pagefind.app/docs/config-sources/#:~:text=overriding%20configuration%20files.-,Config%20files,-Pagefind%20will%20look).
+
+More detail about options at [Pagefind CLI configuration options](https://pagefind.app/docs/config-options/), `jekyll_pagefind` supports the following options.
+
+#### 1. output_subdir
+
+The folder to output the search bundle into, relative to jekyll {{site.dest}}.Default `pagefind`.
+
+**Example :**
 
 ```yaml
-pagefind: path_to_your/pagefind # where your `pagefind` was located
+output_subdir: pf # become _site/pf
 ```
 
-## Development
+#### 2. exclude_selectors
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Pass extra element selectors that Pagefind should ignore when indexing.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+**Example :**
+
+```yaml
+exclude_selectors:
+  - "#my_navigation"
+  - "blockquote > span"
+  - "[id^='prefix-']"
+```
+
+#### 3. keep_index_url
+
+Keeps `index.html` at the end of search result paths.Default `false`
+
+By default, a file at `animals/cat/index.html` will be given the URL `/animals/cat/`. Setting this option to true will result in the URL `/animals/cat/index.html`.
+
+#### 4. quiet
+
+Only logs errors and warnings while indexing the site.
+
+---
+
+### Pagefind UI
+
+#### 1. Using the Default UI
+
+Using the Default UI is still supported but no longer the primary recommendation by Pagefind.
+
+Pagefind UI can be added to any page with the following snippet.The `/pagefind/` or `output_subdir` options in [config](#1-output_subdir) directory and containing files will be created.
+
+```liquid
+<script src="{{ '/pagefind/pagefind-ui.js' | relative_url }}"></script>
+<link rel="stylesheet" href="{{ '/pagefind/pagefind-ui.css' | relative_url }}" />
+
+<div id="search"></div>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
+```
+
+for dark mode:
+
+```css
+body.dark {
+  --pagefind-ui-primary: #eeeeee;
+  --pagefind-ui-text: #eeeeee;
+  --pagefind-ui-background: #152028;
+  --pagefind-ui-border: #152028;
+  --pagefind-ui-tag: #152028;
+}
+```
+
+For more detail at [Using the Default UI](https://pagefind.app/docs/ui-usage/).
+
+#### 2. Pagefind Component UI
+
+Add the following snippet to `<head>`.The `/pagefind/` or `output_subdir` options in [config](#1-output_subdir) directory and containing files will be created.
+
+```liquid
+<script src="{{ '/pagefind/pagefind-component-ui.js' | relative_url }}" type="module"></script>
+<link rel="stylesheet" href="{{ '/pagefind/pagefind-component-ui.css' | relative_url }}" />
+```
+
+for dark mode:
+
+```html
+<div data-pf-theme="dark">
+  <pagefind-searchbox></pagefind-searchbox>
+</div>
+```
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pf-text: #e5e5e5;
+    --pf-text-secondary: #a0a0a0;
+    --pf-text-muted: #949494;
+    --pf-background: #1a1a1a;
+    --pf-border: #333;
+    --pf-border-focus: #555;
+    --pf-skeleton: #2a2a2a;
+    --pf-skeleton-shine: #333;
+    --pf-hover: #252525;
+    --pf-mark: #e5e5e5;
+    --pf-scroll-shadow: rgba(255, 255, 255, 0.1);
+    --pf-outline-focus: #58a6ff;
+
+    --pf-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --pf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --pf-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+    --pf-error-bg: #2a1a1a;
+    --pf-error-border: #5c2828;
+    --pf-error-text: #f87171;
+    --pf-error-text-secondary: #ef4444;
+  }
+}
+```
+
+---
 
 ## Contributing
 
@@ -88,8 +189,3 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Jekyll::Pagefind project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/phothinmg/jekyll-pagefind/blob/master/CODE_OF_CONDUCT.md).
-
-<!-- markdownlint-disable MD053 -->
-
-[pf_release_page]: https://github.com/Pagefind/pagefind/releases/latest
-[pf_to_jekyll]: https://www.bfoliver.com/2025/pagefind

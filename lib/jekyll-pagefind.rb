@@ -36,7 +36,7 @@ module Jekyll
       when /mswin|msys|mingw|cygwin|bccwin/i
         File.join(GEM_ROOT, "assets", "windows-x64", "pagefind.exe")
       else
-        raise "Jekyll-PF Mismatch Error: Pagefind binary not provided for host environment: #{os} (#{cpu})"
+        raise "Jekyll-Pagefind Mismatch Error: Pagefind binary not provided for host environment: #{os} (#{cpu})"
       end
     end
 
@@ -50,14 +50,14 @@ module Jekyll
       end
 
       # Run the indexer pointing explicitly at Jekyll's output directory
-      Jekyll.logger.info "Jekyll-PF:", "Starting Pagefind indexing on target folder..."
+      Jekyll.logger.info "Jekyll-Pagefind:", "Starting Pagefind indexing on target folder..."
       stdout, stderr, status = Open3.capture3("#{binary} --site \"#{site_destination}\"")
 
       if status.success?
-        Jekyll.logger.info "Jekyll-PF:", "Indexing finished successfully!"
+        Jekyll.logger.info "Jekyll-Pagefind:", "Indexing finished successfully!"
         puts stdout
       else
-        Jekyll.logger.error "Jekyll-PF Error:", stderr
+        Jekyll.logger.error "Jekyll-Pagefind Error:", stderr
         raise "Pagefind binary exited with non-zero status code: #{status.exitstatus}"
       end
     end

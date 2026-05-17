@@ -9,17 +9,17 @@
 
 ## Overview
 
-Jekyll-Pagefind is a plugin that running pagefind binary in jekyll site.
+Jekyll-Pagefind is a plugin that runs the Pagefind binary for a Jekyll site.
 
 ## Install
 
-Install the gem and add to the application's Gemfile by executing:
+Install the gem and add it to your application's Gemfile by running:
 
 ```sh
 bundle add jekyll-pagefind
 ```
 
-In `Gemfile`
+In your `Gemfile`:
 
 ```ruby
 group :jekyll_plugins do
@@ -32,7 +32,7 @@ end
 bundle install
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+If Bundler is not being used to manage dependencies, install the gem by running:
 
 ```sh
 gem install jekyll-pagefind
@@ -56,20 +56,20 @@ jekyll_pagefind:
 
 ---
 
-### Jekyll Pagefind options(optional)
+### Jekyll Pagefind options (optional)
 
-These options act as options in [Pagefind Config files](https://pagefind.app/docs/config-sources/#:~:text=overriding%20configuration%20files.-,Config%20files,-Pagefind%20will%20look).
+These options map to the settings available in [Pagefind config files](https://pagefind.app/docs/config-sources/#:~:text=overriding%20configuration%20files.-,Config%20files,-Pagefind%20will%20look).
 
-More detail about options at [Pagefind CLI configuration options](https://pagefind.app/docs/config-options/), `jekyll_pagefind` supports the following options.
+For more details, see [Pagefind CLI configuration options](https://pagefind.app/docs/config-options/). `jekyll_pagefind` supports the following options.
 
 #### 1. output_subdir
 
-The folder to output the search bundle into, relative to jekyll {{site.dest}}.Default `pagefind`.
+The folder where the search bundle is written, relative to Jekyll `{{ site.dest }}`. The default is `pagefind`.
 
-**Example :**
+**Example:**
 
 ```yaml
-output_subdir: pf # become _site/pf
+output_subdir: pf # becomes _site/pf
 ```
 
 #### 2. exclude_selectors
@@ -87,13 +87,13 @@ exclude_selectors:
 
 #### 3. keep_index_url
 
-Keeps `index.html` at the end of search result paths.Default `false`
+Keeps `index.html` at the end of search result paths. The default is `false`.
 
 By default, a file at `animals/cat/index.html` will be given the URL `/animals/cat/`. Setting this option to true will result in the URL `/animals/cat/index.html`.
 
 #### 4. quiet
 
-Only logs errors and warnings while indexing the site.
+Logs only errors and warnings while indexing the site.
 
 ---
 
@@ -101,9 +101,9 @@ Only logs errors and warnings while indexing the site.
 
 #### 1. Using the Default UI
 
-Using the Default UI is still supported but no longer the primary recommendation by Pagefind.
+Using the Default UI is still supported, but it is no longer Pagefind's primary recommendation.
 
-Pagefind UI can be added to any page with the following snippet.The `/pagefind/` or `output_subdir` options in [config](#1-output_subdir) directory and containing files will be created.
+You can add the Pagefind UI to any page with the following snippet. The `/pagefind/` directory, or the directory specified by `output_subdir` in the [config](#1-output_subdir), will be created along with its files.
 
 ```liquid
 <script src="{{ '/pagefind/pagefind-ui.js' | relative_url }}"></script>
@@ -117,7 +117,7 @@ Pagefind UI can be added to any page with the following snippet.The `/pagefind/`
 </script>
 ```
 
-for dark mode:
+For dark mode:
 
 ```css
 body.dark {
@@ -129,18 +129,18 @@ body.dark {
 }
 ```
 
-For more detail at [Using the Default UI](https://pagefind.app/docs/ui-usage/).
+For more details, see [Using the Default UI](https://pagefind.app/docs/ui-usage/).
 
 #### 2. Pagefind Component UI
 
-Add the following snippet to `<head>`.The `/pagefind/` or `output_subdir` options in [config](#1-output_subdir) directory and containing files will be created.
+Add the following snippet to `<head>`. The `/pagefind/` directory, or the directory specified by `output_subdir` in the [config](#1-output_subdir), will be created along with its files.
 
 ```liquid
 <script src="{{ '/pagefind/pagefind-component-ui.js' | relative_url }}" type="module"></script>
 <link rel="stylesheet" href="{{ '/pagefind/pagefind-component-ui.css' | relative_url }}" />
 ```
 
-for dark mode:
+For dark mode:
 
 ```html
 <div data-pf-theme="dark">
@@ -176,6 +176,8 @@ for dark mode:
 }
 ```
 
+For more details, see [Using the Default UI](https://pagefind.app/docs/search-ui/).
+
 ---
 
 ## Contributing
@@ -188,4 +190,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Jekyll::Pagefind project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/phothinmg/jekyll-pagefind/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Jekyll::Pagefind project's codebase, issue trackers, chat rooms, and mailing lists is expected to follow the [code of conduct](https://github.com/phothinmg/jekyll-pagefind/blob/master/CODE_OF_CONDUCT.md).

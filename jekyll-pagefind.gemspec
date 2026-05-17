@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Pagefind plugin for Jekyll"
   spec.description = "Run pagefind binary in jekyll site"
-  spec.homepage = "https://github.com/phothinmg/jekykll-pagefind"
+  spec.homepage = "https://rubygems.org/gems/jekyll-pagefind"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.1.0"
   spec.metadata["homepage_uri"] = spec.homepage

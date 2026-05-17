@@ -176,7 +176,7 @@ For dark mode:
 }
 ```
 
-For more details, see [Using the Default UI](https://pagefind.app/docs/search-ui/).
+For more details, see [Pagefind Component UI](https://pagefind.app/docs/search-ui/).
 
 ---
 

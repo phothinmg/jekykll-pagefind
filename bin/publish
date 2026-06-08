@@ -3,6 +3,16 @@ set -euo pipefail
 
 read -p "Enter version: " version
 
-gem push jekyll-pagefind-"$version".gem
+shopt -s nullglob
+gems=(jekyll-pagefind-"$version"-*.gem)
 
-rm -rf jekyll-pagefind-"$version".gem
+if [[ ${#gems[@]} -eq 0 ]]; then
+	printf 'No platform gems found for version %s\n' "$version" >&2
+	exit 1
+fi
+
+for gem_file in "${gems[@]}"; do
+	gem push "$gem_file"
+done
+
+rm -f "${gems[@]}"

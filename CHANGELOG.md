@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-06-08
+
+### Changed
+
+- Reduced Pagefind logging to concise start, success, and error messages.
+- Successful indexing now reports total runtime.
+
+### Added
+
+- Added a fixture-based smoke test for Jekyll builds that verifies Pagefind runs and emits concise logs.
+- Added a GitHub Actions workflow for lint, smoke test, and host-platform gem build.
+
 ## [0.3.0] - 2026-05-17
 
 - Major release

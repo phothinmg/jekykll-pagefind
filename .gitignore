@@ -12,3 +12,6 @@ vendor/bundle/
 Gemfile.lock
 notes.txt
 p.rb
+_site
+.jekyll-cache
+vendor

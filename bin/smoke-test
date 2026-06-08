@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+fixture_source="$repo_root/test/fixtures/site"
+work_dir="$(mktemp -d)"
+site_dir="$work_dir/site"
+log_file="$work_dir/jekyll-build.log"
+
+cleanup() {
+  rm -rf "$work_dir"
+}
+
+trap cleanup EXIT
+
+cd "$repo_root"
+
+bundle exec jekyll build \
+  --source "$fixture_source" \
+  --destination "$site_dir" \
+  >"$log_file" 2>&1
+
+grep -F "Jekyll-Pagefind: Running Pagefind..." "$log_file" >/dev/null
+grep -E "Jekyll-Pagefind: Done in [0-9]+\.[0-9]{2}s" "$log_file" >/dev/null
+test -f "$site_dir/pagefind/pagefind.js"
+
+printf 'Smoke test passed.\n'

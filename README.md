@@ -38,6 +38,8 @@ If Bundler is not being used to manage dependencies, install the gem by running:
 gem install jekyll-pagefind
 ```
 
+RubyGems will install the platform-specific package that matches the host OS and CPU.
+
 ## Use
 
 ### Jekyll site configuration
@@ -181,6 +183,43 @@ For more details, see [Pagefind Component UI](https://pagefind.app/docs/search-u
 ---
 
 ## Contributing
+
+## Maintainer Release Notes
+
+This gem is published as platform-specific packages so users only download the binary for their host OS.
+
+Build the current host variant:
+
+```sh
+make build
+```
+
+Run the fixture-based smoke test:
+
+```sh
+make smoke-test
+```
+
+Build every supported variant:
+
+```sh
+make build-all
+```
+
+Publish the built platform gems for a version:
+
+```sh
+make publish
+```
+
+`bin/build-platform-gems` currently maps these asset folders to RubyGems platforms:
+
+- `assets/linux-x64` -> `x86_64-linux`
+- `assets/linux-arm64` -> `aarch64-linux`
+- `assets/macos-x64` -> `x86_64-darwin`
+- `assets/macos-arm64` -> `arm64-darwin`
+- `assets/windows-x64` -> `x64-mingw32`, `x64-mingw-ucrt`
+- `assets/windows-arm64` -> `arm64-mingw32`, `arm64-mingw-ucrt`
 
 Bug reports and pull requests are welcome on GitHub at <https://github.com/phothinmg/jekyll-pagefind>. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/phothinmg/jekyll-pagefind/blob/master/CODE_OF_CONDUCT.md).
 

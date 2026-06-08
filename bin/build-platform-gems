@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+declare -A GEM_PLATFORMS=(
+  [linux-x64]=x86_64-linux
+  [linux-arm64]=aarch64-linux
+  [macos-x64]=x86_64-darwin
+  [macos-arm64]=arm64-darwin
+  [windows-x64]="x64-mingw32 x64-mingw-ucrt"
+  [windows-arm64]="arm64-mingw32 arm64-mingw-ucrt"
+)
+
+detect_current_asset() {
+  local os
+  local arch
+
+  os="$(uname -s)"
+  arch="$(uname -m)"
+
+  case "$os" in
+    Linux)
+      case "$arch" in
+        aarch64|arm64)
+          printf '%s\n' "linux-arm64"
+          ;;
+        x86_64|amd64)
+          printf '%s\n' "linux-x64"
+          ;;
+        *)
+          printf 'Unsupported Linux architecture: %s\n' "$arch" >&2
+          return 1
+          ;;
+      esac
+      ;;
+    Darwin)
+      case "$arch" in
+        arm64|aarch64)
+          printf '%s\n' "macos-arm64"
+          ;;
+        x86_64)
+          printf '%s\n' "macos-x64"
+          ;;
+        *)
+          printf 'Unsupported macOS architecture: %s\n' "$arch" >&2
+          return 1
+          ;;
+      esac
+      ;;
+    MINGW*|MSYS*|CYGWIN*)
+      case "$arch" in
+        aarch64|arm64)
+          printf '%s\n' "windows-arm64"
+          ;;
+        x86_64|amd64)
+          printf '%s\n' "windows-x64"
+          ;;
+        *)
+          printf 'Unsupported Windows architecture: %s\n' "$arch" >&2
+          return 1
+          ;;
+      esac
+      ;;
+    *)
+      printf 'Unsupported host OS: %s\n' "$os" >&2
+      return 1
+      ;;
+  esac
+}
+
+build_variant() {
+  local asset_name="$1"
+  local gem_platforms="${GEM_PLATFORMS[$asset_name]:-}"
+
+  if [[ -z "$gem_platforms" ]]; then
+    printf 'Unknown asset variant: %s\n' "$asset_name" >&2
+    return 1
+  fi
+
+  local gem_platform
+  for gem_platform in $gem_platforms; do
+    printf 'Building %s (%s)\n' "$asset_name" "$gem_platform"
+    PAGEFIND_ASSET_DIR="assets/$asset_name" \
+      PAGEFIND_GEM_PLATFORM="$gem_platform" \
+      gem build jekyll-pagefind.gemspec
+  done
+}
+
+main() {
+  if [[ $# -eq 0 || "$1" == "current" ]]; then
+    build_variant "$(detect_current_asset)"
+    return
+  fi
+
+  if [[ "$1" == "all" ]]; then
+    local asset_name
+    for asset_name in linux-x64 linux-arm64 macos-x64 macos-arm64 windows-x64 windows-arm64; do
+      build_variant "$asset_name"
+    done
+    return
+  fi
+
+  local asset_name
+  for asset_name in "$@"; do
+    build_variant "$asset_name"
+  done
+}
+
+main "$@"

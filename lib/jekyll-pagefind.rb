@@ -3,6 +3,7 @@
 require "rbconfig"
 require "open3"
 require "jekyll"
+require "shellwords"
 
 require_relative "version"
 
@@ -79,7 +80,7 @@ module Jekyll
       args.join(" ")
     end
 
-    def self.run_pagefind(site_destination, extra_arguments = "") # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+    def self.run_pagefind(site_destination, extra_arguments = "") # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       binary = pagefind_binary_path
 
       # Force execution bits on UNIX hosts because gem unpacking can reset permissions flags
@@ -89,14 +90,20 @@ module Jekyll
       end
 
       # Combine the mandatory --site parameter with any user-defined configuration flags
-      full_command = "#{binary} --site \"#{site_destination}\" #{extra_arguments}".strip
+      full_command = [
+        Shellwords.escape(binary),
+        "--site",
+        Shellwords.escape(site_destination),
+        extra_arguments
+      ].join(" ").strip
+      started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-      Jekyll.logger.info "Jekyll-Pagefind:", "Running command: #{full_command}"
-      stdout, stderr, status = Open3.capture3(full_command)
+      Jekyll.logger.info "Jekyll-Pagefind:", "Running Pagefind..."
+      _stdout, stderr, status = Open3.capture3(full_command)
 
       if status.success?
-        Jekyll.logger.info "Jekyll-Pagefind:", "Indexing finished successfully!"
-        puts stdout
+        elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at
+        Jekyll.logger.info "Jekyll-Pagefind:", format("Done in %.2fs", elapsed)
       else
         Jekyll.logger.error "Jekyll-Pagefind Error:", stderr
         raise "Pagefind binary exited with non-zero status code: #{status.exitstatus}"
@@ -107,8 +114,8 @@ end
 
 # Hook ensures Jekyll is entirely done writing HTML pages to disk
 Jekyll::Hooks.register :site, :post_write do |site|
-  # 1. Parse your plugin settings out of site.config
+  # Parse plugin settings out of site.config
   custom_flags = Jekyll::Pagefind.build_cli_arguments(site.config)
-  # 2. Run Pagefind with the compiled flags
+  # Run Pagefind with the compiled flags
   Jekyll::Pagefind.run_pagefind(site.dest, custom_flags)
 end

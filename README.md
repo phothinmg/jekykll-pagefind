@@ -39,6 +39,7 @@ gem install jekyll-pagefind
 ```
 
 RubyGems will install the platform-specific package that matches the host OS and CPU.
+If no matching platform gem is selected, the generic `ruby` gem raises a clear error telling the user to add the deploy platform to `Gemfile.lock`.
 
 ## Use
 
@@ -212,10 +213,21 @@ Publish the built platform gems for a version:
 make publish
 ```
 
+GitHub Actions trusted publishing is supported.
+
+To enable it on RubyGems.org for this repo:
+
+1. Open the `jekyll-pagefind` gem page.
+2. Go to `Trusted publishers`.
+3. Create a publisher with repository `phothinmg/jekyll-pagefind`, workflow filename `release.yml`, and environment `release`.
+
+After that, pushing a tag like `v0.3.2` will run `.github/workflows/release.yml` and publish all built gems without a stored API token or manual OTP entry.
+
 `bin/build-platform-gems` currently maps these asset folders to RubyGems platforms:
 
-- `assets/linux-x64` -> `x86_64-linux`
-- `assets/linux-arm64` -> `aarch64-linux`
+- `ruby` -> `ruby` (generic fallback gem with no bundled binary)
+- `assets/linux-x64` -> `x86_64-linux-gnu`, `x86_64-linux-musl`
+- `assets/linux-arm64` -> `aarch64-linux-gnu`, `aarch64-linux-musl`
 - `assets/macos-x64` -> `x86_64-darwin`
 - `assets/macos-arm64` -> `arm64-darwin`
 - `assets/windows-x64` -> `x64-mingw32`, `x64-mingw-ucrt`

@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-read -p "Enter version: " version
+version="${1:-}"
+
+if [[ -z "$version" ]]; then
+	read -p "Enter version: " version
+fi
 
 shopt -s nullglob
-gems=(jekyll-pagefind-"$version"-*.gem)
+gems=()
+
+if [[ -f jekyll-pagefind-"$version".gem ]]; then
+	gems+=(jekyll-pagefind-"$version".gem)
+fi
+
+for gem_file in jekyll-pagefind-"$version"-*.gem; do
+	gems+=("$gem_file")
+done
 
 if [[ ${#gems[@]} -eq 0 ]]; then
-	printf 'No platform gems found for version %s\n' "$version" >&2
+	printf 'No gems found for version %s\n' "$version" >&2
 	exit 1
 fi
 

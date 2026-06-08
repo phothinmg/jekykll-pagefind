@@ -42,7 +42,7 @@ jobs:
         run: make build-all
 
       - name: Configure RubyGems credentials
-        uses: rubygems/configure-rubygems-credentials@v2
+        uses: rubygems/configure-rubygems-credentials@v2.0.0
 
       - name: Publish gems
         env:

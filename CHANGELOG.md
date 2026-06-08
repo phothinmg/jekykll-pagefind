@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Linux gems now build separate `gnu` and `musl` RubyGems platform variants from the same static Pagefind binaries.
+- Release builds now include a generic `ruby` gem so RubyGems shows the latest version on the main gem page.
+- `bin/publish` now supports non-interactive version input for CI releases.
+
+### Added
+
+- Added a GitHub Actions trusted publishing workflow for tag-based RubyGems releases.
+
 ## [0.3.1] - 2026-06-08
 
 ### Changed

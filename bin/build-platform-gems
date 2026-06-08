@@ -2,8 +2,9 @@
 set -euo pipefail
 
 declare -A GEM_PLATFORMS=(
-  [linux-x64]=x86_64-linux
-  [linux-arm64]=aarch64-linux
+  [ruby]=ruby
+  [linux-x64]="x86_64-linux-gnu x86_64-linux-musl"
+  [linux-arm64]="aarch64-linux-gnu aarch64-linux-musl"
   [macos-x64]=x86_64-darwin
   [macos-arm64]=arm64-darwin
   [windows-x64]="x64-mingw32 x64-mingw-ucrt"
@@ -79,9 +80,15 @@ build_variant() {
   local gem_platform
   for gem_platform in $gem_platforms; do
     printf 'Building %s (%s)\n' "$asset_name" "$gem_platform"
-    PAGEFIND_ASSET_DIR="assets/$asset_name" \
+    if [[ "$asset_name" == "ruby" ]]; then
       PAGEFIND_GEM_PLATFORM="$gem_platform" \
-      gem build jekyll-pagefind.gemspec
+        PAGEFIND_INCLUDE_ASSETS=false \
+        gem build jekyll-pagefind.gemspec
+    else
+      PAGEFIND_ASSET_DIR="assets/$asset_name" \
+        PAGEFIND_GEM_PLATFORM="$gem_platform" \
+        gem build jekyll-pagefind.gemspec
+    fi
   done
 }
 
@@ -93,7 +100,7 @@ main() {
 
   if [[ "$1" == "all" ]]; then
     local asset_name
-    for asset_name in linux-x64 linux-arm64 macos-x64 macos-arm64 windows-x64 windows-arm64; do
+    for asset_name in ruby linux-x64 linux-arm64 macos-x64 macos-arm64 windows-x64 windows-arm64; do
       build_variant "$asset_name"
     done
     return

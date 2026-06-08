@@ -11,43 +11,56 @@ module Jekyll
   # module Jekyll::Pagefind
   module Pagefind
     GEM_ROOT = File.expand_path("..", __dir__)
+    PLATFORM_HELP = "Install a matching platform gem or add your deploy platform to Gemfile.lock with bundle lock --add-platform x86_64-linux-gnu x86_64-linux-musl aarch64-linux-gnu aarch64-linux-musl." # rubocop:disable Layout/LineLength
+    PLATFORM_PREFIXES = {
+      /darwin|mac os/i => "macos",
+      /linux/i => "linux",
+      /mswin|msys|mingw|cygwin|bccwin/i => "windows"
+    }.freeze
 
-    def self.pagefind_binary_path # rubocop:disable Metrics/MethodLength,Metrics/PerceivedComplexity
+    def self.pagefind_binary_path
       os = RbConfig::CONFIG["host_os"]
       cpu = RbConfig::CONFIG["host_cpu"]
 
-      case os
-      when /darwin|mac os/i
-        # Differentiate between Apple Silicon and Intel Macs
-        if cpu =~ /arm64|aarch64/i
-          File.join(GEM_ROOT, "assets", "macos-arm64",
-                    "pagefind")
-        else
-          File.join(GEM_ROOT, "assets", "macos-x64", "pagefind")
-        end
-      when /linux/i
-        # Differentiate between standard servers and ARM instances
-        if cpu =~ /arm64|aarch64/i
-          File.join(GEM_ROOT, "assets", "linux-arm64",
-                    "pagefind")
-        else
-          File.join(GEM_ROOT, "assets", "linux-x64", "pagefind")
-        end
-        # spellchecker:disable-next-line
-      when /mswin|msys|mingw|cygwin|bccwin/i
-        # Differentiate between Intel/AMD and ARM Windows machines
-        if cpu =~ /arm64|aarch64/i
-          File.join(GEM_ROOT, "assets", "windows-arm64", "pagefind.exe")
-        else
-          File.join(GEM_ROOT, "assets", "windows-x64", "pagefind.exe")
-        end
-      else
-        raise "Jekyll-Pagefind Mismatch Error: Pagefind binary not provided for host environment: #{os} (#{cpu})"
+      binary = File.join(
+        GEM_ROOT,
+        "assets",
+        platform_directory(os, cpu),
+        binary_name(os)
+      )
+
+      return binary if File.exist?(binary)
+
+      raise "Jekyll-Pagefind Mismatch Error: no packaged Pagefind binary was found for #{os} (#{cpu}). #{PLATFORM_HELP}"
+    end
+
+    def self.platform_directory(os, cpu)
+      platform = PLATFORM_PREFIXES.find { |pattern, _value| os.match?(pattern) }&.last
+
+      unless platform
+        raise(
+          "Jekyll-Pagefind Mismatch Error: " \
+          "Pagefind binary not provided for host environment: #{os} (#{cpu})"
+        )
       end
+
+      "#{platform}-#{arm_cpu?(cpu) ? "arm64" : "x64"}"
+    end
+
+    def self.binary_name(os)
+      windows_host?(os) ? "pagefind.exe" : "pagefind"
+    end
+
+    def self.arm_cpu?(cpu)
+      cpu =~ /arm64|aarch64/i
+    end
+
+    def self.windows_host?(os)
+      os =~ /mswin|msys|mingw|cygwin|bccwin/i
     end
 
     # valid the cli flag
-    def self.valid_args(arg)
+    def self.valid_arg?(arg)
       %w[output_subdir exclude_selectors keep_index_url quiet].include?(arg)
     end
 
@@ -57,7 +70,7 @@ module Jekyll
       args = []
 
       plugin_config.each do |key, value|
-        next unless valid_args(key)
+        next unless valid_arg?(key)
 
         # Transform snake_case keys to kebab-case (e.g., keep_index_url -> keep-index-url)
         flag_name = key.to_s.gsub("_", "-")

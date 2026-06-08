@@ -14,11 +14,12 @@ default_pagefind_asset_directory = case host_os
                                    when /mswin|msys|mingw|cygwin|bccwin/i
                                      host_cpu =~ /arm64|aarch64/i ? "assets/windows-arm64" : "assets/windows-x64"
                                    else
-                                     raise "Unable to determine a default Pagefind asset directory for host environment: #{host_os} (#{host_cpu})"
+                                     raise "Unable to determine a default Pagefind asset directory for host environment: #{host_os} (#{host_cpu})" # rubocop:disable Layout/LineLength
                                    end
 
 pagefind_asset_directory = ENV.fetch("PAGEFIND_ASSET_DIR", default_pagefind_asset_directory)
 pagefind_gem_platform = ENV.fetch("PAGEFIND_GEM_PLATFORM", Gem::Platform::RUBY)
+pagefind_include_assets = ENV.fetch("PAGEFIND_INCLUDE_ASSETS", "true") == "true"
 
 Gem::Specification.new do |spec|
   spec.name = "jekyll-pagefind"
@@ -32,12 +33,15 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://rubygems.org/gems/jekyll-pagefind"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.1.0"
+  spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/phothinmg/jekykll-pagefind"
   spec.metadata["changelog_uri"] = "https://github.com/phothinmg/jekykll-pagefind/blob/main/CHANGELOG.md"
 
   spec.files = Dir.chdir(__dir__) do
-    Dir["README.md", "LICENSE.txt", "lib/**/*", "#{pagefind_asset_directory}/**/*", "jekyll-pagefind.gemspec"]
+    files = ["README.md", "LICENSE.txt", "lib/**/*", "jekyll-pagefind.gemspec"]
+    files << "#{pagefind_asset_directory}/**/*" if pagefind_include_assets
+    Dir[*files]
   end
   spec.require_paths = ["lib"]
   spec.add_dependency "jekyll", "~> 4.4"

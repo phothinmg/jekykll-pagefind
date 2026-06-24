@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD041 -->
 <p align="center">
-<img src="https://susee.phothin.dev/logo/rubygems_logo.png" width="160" height="160" alt="mmdevs" style="border-radius:50%" />
+<img src="https://pub-c9ba018358dd48a99b70013b65a25e5f.r2.dev/logo/rubygems_logo.webp" width="160" height="160" alt="mmdevs" style="border-radius:50%" />
 </p>
 <h1 align="center">jekyll-pagefind</h1>
 

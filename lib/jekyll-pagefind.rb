@@ -11,6 +11,7 @@ module Jekyll
   # module Jekyll::Pagefind
   module Pagefind
     GEM_ROOT = File.expand_path("..", __dir__)
+    DEFAULT_OUTPUT_SUBDIR = "pagefind"
 
     def self.pagefind_binary_path # rubocop:disable Metrics/MethodLength,Metrics/PerceivedComplexity
       os = RbConfig::CONFIG["host_os"]
@@ -80,6 +81,25 @@ module Jekyll
       args.join(" ")
     end
 
+    def self.bundle_path(config)
+      plugin_config = config["jekyll_pagefind"] || {}
+      output_subdir = plugin_config.fetch("output_subdir", DEFAULT_OUTPUT_SUBDIR).to_s
+      output_subdir = DEFAULT_OUTPUT_SUBDIR if output_subdir.empty?
+      baseurl = config.fetch("baseurl", "").to_s
+
+      segments = [baseurl, output_subdir].filter_map do |segment|
+        normalized = normalize_path_segment(segment)
+        normalized unless normalized.empty?
+      end
+
+      "/#{segments.join("/")}/"
+    end
+
+    def self.normalize_path_segment(segment)
+      segment.to_s.gsub(%r{\A/+|/+\z}, "")
+    end
+    private_class_method :normalize_path_segment
+
     def self.run_pagefind(site_destination, extra_arguments = "") # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       binary = pagefind_binary_path
 
@@ -109,6 +129,35 @@ module Jekyll
         raise "Pagefind binary exited with non-zero status code: #{status.exitstatus}"
       end
     end
+
+    # Liquid tag that emits a baseurl-aware Pagefind bundle path.
+    class BundlePathTag < Liquid::Tag
+      def render(context)
+        site = context.registers[:site]
+        return "/#{DEFAULT_OUTPUT_SUBDIR}/" unless site
+
+        Jekyll::Pagefind.bundle_path(site.config)
+      end
+    end
+
+    # Liquid tag that emits a full baseurl-aware URL for a Pagefind asset file.
+    # Usage: {% pagefind_asset_url "pagefind-ui.js" %}
+    # Handles all combinations of baseurl and output_subdir being set or unset.
+    class AssetUrlTag < Liquid::Tag
+      def initialize(tag_name, markup, tokens)
+        super
+        @filename = markup.strip.delete("'\"")
+      end
+
+      def render(context)
+        site = context.registers[:site]
+        base = site ? Jekyll::Pagefind.bundle_path(site.config) : "/#{DEFAULT_OUTPUT_SUBDIR}/"
+        "#{base}#{@filename}"
+      end
+    end
+
+    Liquid::Template.register_tag("pagefind_bundle_path", Jekyll::Pagefind::BundlePathTag)
+    Liquid::Template.register_tag("pagefind_asset_url", Jekyll::Pagefind::AssetUrlTag)
   end
 end
 

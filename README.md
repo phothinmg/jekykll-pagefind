@@ -115,10 +115,16 @@ You can add the Pagefind UI to any page with the following snippet. The `/pagefi
 <div id="search"></div>
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
-        new PagefindUI({ element: "#search", showSubResults: true });
+        new PagefindUI({
+            element: "#search",
+            showSubResults: true,
+            bundlePath: "{% pagefind_bundle_path %}"
+        });
     });
 </script>
 ```
+
+When your Jekyll site uses `baseurl` (for example on GitHub Pages project sites), always set Pagefind `bundlePath` to a baseurl-aware path. The `{% pagefind_bundle_path %}` tag outputs `site.baseurl + jekyll_pagefind.output_subdir` and includes trailing `/`, so it works for both root and project deployments.
 
 For dark mode:
 
@@ -142,6 +148,8 @@ Add the following snippet to `<head>`. The `/pagefind/` directory, or the direct
 <script src="{{ '/pagefind/pagefind-component-ui.js' | relative_url }}" type="module"></script>
 <link rel="stylesheet" href="{{ '/pagefind/pagefind-component-ui.css' | relative_url }}" />
 ```
+
+If you initialize the component via JavaScript, pass `bundlePath: "{% pagefind_bundle_path %}"` so the search bundle resolves correctly when `baseurl` is set.
 
 For dark mode:
 

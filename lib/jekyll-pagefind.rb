@@ -11,6 +11,7 @@ module Jekyll
   # module Jekyll::Pagefind
   module Pagefind
     GEM_ROOT = File.expand_path("..", __dir__)
+    DEFAULT_OUTPUT_SUBDIR = "pagefind"
 
     def self.pagefind_binary_path # rubocop:disable Metrics/MethodLength,Metrics/PerceivedComplexity
       os = RbConfig::CONFIG["host_os"]
@@ -80,6 +81,20 @@ module Jekyll
       args.join(" ")
     end
 
+    def self.bundle_path(config)
+      plugin_config = config["jekyll_pagefind"] || {}
+      output_subdir = plugin_config.fetch("output_subdir", DEFAULT_OUTPUT_SUBDIR).to_s
+      output_subdir = DEFAULT_OUTPUT_SUBDIR if output_subdir.empty?
+      baseurl = config.fetch("baseurl", "").to_s
+
+      segments = [baseurl, output_subdir].filter_map do |segment|
+        normalized = segment.gsub(%r{\A/+|/+\z}, "")
+        normalized unless normalized.empty?
+      end
+
+      "/#{segments.join("/")}/"
+    end
+
     def self.run_pagefind(site_destination, extra_arguments = "") # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       binary = pagefind_binary_path
 
@@ -109,6 +124,18 @@ module Jekyll
         raise "Pagefind binary exited with non-zero status code: #{status.exitstatus}"
       end
     end
+
+    # Liquid tag that emits a baseurl-aware Pagefind bundle path.
+    class BundlePathTag < Liquid::Tag
+      def render(context)
+        site = context.registers[:site]
+        return "/#{DEFAULT_OUTPUT_SUBDIR}/" unless site
+
+        Jekyll::Pagefind.bundle_path(site.config)
+      end
+    end
+
+    Liquid::Template.register_tag("pagefind_bundle_path", Jekyll::Pagefind::BundlePathTag)
   end
 end
 

@@ -140,7 +140,24 @@ module Jekyll
       end
     end
 
+    # Liquid tag that emits a full baseurl-aware URL for a Pagefind asset file.
+    # Usage: {% pagefind_asset_url "pagefind-ui.js" %}
+    # Handles all combinations of baseurl and output_subdir being set or unset.
+    class AssetUrlTag < Liquid::Tag
+      def initialize(tag_name, markup, tokens)
+        super
+        @filename = markup.strip.delete("'\"")
+      end
+
+      def render(context)
+        site = context.registers[:site]
+        base = site ? Jekyll::Pagefind.bundle_path(site.config) : "/#{DEFAULT_OUTPUT_SUBDIR}/"
+        "#{base}#{@filename}"
+      end
+    end
+
     Liquid::Template.register_tag("pagefind_bundle_path", Jekyll::Pagefind::BundlePathTag)
+    Liquid::Template.register_tag("pagefind_asset_url", Jekyll::Pagefind::AssetUrlTag)
   end
 end
 

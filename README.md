@@ -109,8 +109,8 @@ Using the Default UI is still supported, but it is no longer Pagefind's primary 
 You can add the Pagefind UI to any page with the following snippet. The `/pagefind/` directory, or the directory specified by `output_subdir` in the [config](#1-output_subdir), will be created along with its files.
 
 ```liquid
-<script src="{{ '/pagefind/pagefind-ui.js' | relative_url }}"></script>
-<link rel="stylesheet" href="{{ '/pagefind/pagefind-ui.css' | relative_url }}" />
+<script src="{% pagefind_asset_url 'pagefind-ui.js' %}"></script>
+<link rel="stylesheet" href="{% pagefind_asset_url 'pagefind-ui.css' %}" />
 
 <div id="search"></div>
 <script>
@@ -124,7 +124,7 @@ You can add the Pagefind UI to any page with the following snippet. The `/pagefi
 </script>
 ```
 
-When your Jekyll site uses `baseurl` (for example on GitHub Pages project sites), always set Pagefind `bundlePath` to a baseurl-aware path. The `{% pagefind_bundle_path %}` tag constructs the path from `site.baseurl` and `jekyll_pagefind.output_subdir` (with normalized slashes) and includes trailing `/`, so it works for both root and project deployments.
+`{% pagefind_asset_url 'filename' %}` and `{% pagefind_bundle_path %}` both handle all four combinations of `baseurl` and `output_subdir` being set or unset, so the snippet works correctly for root deployments, GitHub Pages project sites, and custom `output_subdir` values without any extra configuration.
 
 For dark mode:
 
@@ -142,11 +142,11 @@ For more details, see [Using the Default UI](https://pagefind.app/docs/ui-usage/
 
 #### 2. Pagefind Component UI
 
-Add the following snippet to `<head>`. The `/pagefind/` directory, or the directory specified by `output_subdir` in the [config](#1-output_subdir), will be created along with its files.
+Add the following snippet to `<head>`. The bundle directory specified by `output_subdir` in the [config](#1-output_subdir) (default: `pagefind`) will be created along with its files.
 
 ```liquid
-<script src="{{ '/pagefind/pagefind-component-ui.js' | relative_url }}" type="module"></script>
-<link rel="stylesheet" href="{{ '/pagefind/pagefind-component-ui.css' | relative_url }}" />
+<script src="{% pagefind_asset_url 'pagefind-component-ui.js' %}" type="module"></script>
+<link rel="stylesheet" href="{% pagefind_asset_url 'pagefind-component-ui.css' %}" />
 ```
 
 If you initialize the component via JavaScript, pass `bundlePath: "{% pagefind_bundle_path %}"` so the search bundle resolves correctly when `baseurl` is set.

@@ -88,12 +88,17 @@ module Jekyll
       baseurl = config.fetch("baseurl", "").to_s
 
       segments = [baseurl, output_subdir].filter_map do |segment|
-        normalized = segment.gsub(%r{\A/+|/+\z}, "")
+        normalized = normalize_path_segment(segment)
         normalized unless normalized.empty?
       end
 
       "/#{segments.join("/")}/"
     end
+
+    def self.normalize_path_segment(segment)
+      segment.to_s.gsub(%r{\A/+|/+\z}, "")
+    end
+    private_class_method :normalize_path_segment
 
     def self.run_pagefind(site_destination, extra_arguments = "") # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       binary = pagefind_binary_path

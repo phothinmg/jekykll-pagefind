@@ -124,7 +124,7 @@ You can add the Pagefind UI to any page with the following snippet. The `/pagefi
 </script>
 ```
 
-When your Jekyll site uses `baseurl` (for example on GitHub Pages project sites), always set Pagefind `bundlePath` to a baseurl-aware path. The `{% pagefind_bundle_path %}` tag outputs `site.baseurl + jekyll_pagefind.output_subdir` and includes trailing `/`, so it works for both root and project deployments.
+When your Jekyll site uses `baseurl` (for example on GitHub Pages project sites), always set Pagefind `bundlePath` to a baseurl-aware path. The `{% pagefind_bundle_path %}` tag constructs the path from `site.baseurl` and `jekyll_pagefind.output_subdir` (with normalized slashes) and includes trailing `/`, so it works for both root and project deployments.
 
 For dark mode:
 

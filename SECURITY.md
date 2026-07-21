@@ -2,8 +2,7 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+The following versions are currently supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -12,8 +11,11 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you discover a security vulnerability, please report it by email to
+[phothinmg@disroot.org](mailto:phothinmg@disroot.org).
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Please include a clear description of the issue, steps to reproduce it, and
+its potential impact. You can expect an initial response within 7 days.
+
+After review, we will let you know whether the report is accepted and share
+next steps for remediation.

@@ -1,7 +1,0 @@
-plugins:
-  - jekyll-pagefind
-
-title: Pagefind Smoke Test
-
-jekyll_pagefind:
-  output_subdir: pagefind

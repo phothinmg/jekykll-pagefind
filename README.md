@@ -11,6 +11,11 @@
 
 Jekyll-Pagefind is a plugin that runs the Pagefind binary for a Jekyll site.
 
+> [!IMPORTANT]
+> Please use plugin gem version `>= 0.3.3`.
+> Before that versions are incompatible with current API.
+> See [SECURITY.md](SECURITY.md)
+
 ## Install
 
 Install the gem and add it to your application's Gemfile by running:
@@ -108,8 +113,34 @@ Using the Default UI is still supported, but it is no longer Pagefind's primary 
 
 You can add the Pagefind UI to any page with the following snippet. The `/pagefind/` directory, or the directory specified by `output_subdir` in the [config](#1-output_subdir), will be created along with its files.
 
+##### 1.1 Using with baseUrl `https://<username|org-name>.github.io/<repo-name>`
+
 ```liquid
+<!-- Load the CSS asset using Jekyll's baseurl -->
 <script src="{{ '/pagefind/pagefind-ui.js' | relative_url }}"></script>
+<!-- Load the JS asset using Jekyll's baseurl -->
+<link rel="stylesheet" href="{{ '/pagefind/pagefind-ui.css' | relative_url }}" />
+
+<div id="search"></div>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({
+            element: "#search",
+            // Tells Pagefind UI exactly where to find the search bundle folder
+            bundlePath: "{{ '/pagefind/' | relative_url }}",
+            // Tells Pagefind to correctly prepend the baseurl to search results paths
+            baseUrl: "{{ '/' | relative_url }}"
+        });
+    });
+</script>
+```
+
+##### 1.2 Using without baseUrl
+
+```liquid
+<!-- Load the CSS asset using Jekyll's baseurl -->
+<script src="{{ '/pagefind/pagefind-ui.js' | relative_url }}"></script>
+<!-- Load the JS asset using Jekyll's baseurl -->
 <link rel="stylesheet" href="{{ '/pagefind/pagefind-ui.css' | relative_url }}" />
 
 <div id="search"></div>
@@ -120,7 +151,7 @@ You can add the Pagefind UI to any page with the following snippet. The `/pagefi
 </script>
 ```
 
-For dark mode:
+##### 1.3 For dark mode
 
 ```css
 body.dark {
@@ -138,18 +169,45 @@ For more details, see [Using the Default UI](https://pagefind.app/docs/ui-usage/
 
 Add the following snippet to `<head>`. The `/pagefind/` directory, or the directory specified by `output_subdir` in the [config](#1-output_subdir), will be created along with its files.
 
+##### 2.1 Using with baseUrl `https://<username|org-name>.github.io/<repo-name>`
+
 ```liquid
+<head>
+  <!-- Load the CSS asset using Jekyll's baseurl -->
 <script src="{{ '/pagefind/pagefind-component-ui.js' | relative_url }}" type="module"></script>
+<!-- Load the JS asset using Jekyll's baseurl -->
 <link rel="stylesheet" href="{{ '/pagefind/pagefind-component-ui.css' | relative_url }}" />
+</head>
+<body>
+  <!-- For dark mode wrap with <div data-pf-theme="dark"> -->
+  <div data-pf-theme="dark">
+    <pagefind-config
+      bundle-path="{{ '/pagefind/' | relative_url }}"
+      base-url="{{ '/' | relative_url }}">
+    </pagefind-config>
+    <pagefind-searchbox></pagefind-searchbox>
+  </div>
+</body>
 ```
 
-For dark mode:
+##### 2.2 Using without baseUrl
 
-```html
-<div data-pf-theme="dark">
-  <pagefind-searchbox></pagefind-searchbox>
-</div>
+```liquid
+<head>
+  <!-- Load the CSS asset using Jekyll's baseurl -->
+<script src="{{ '/pagefind/pagefind-component-ui.js' | relative_url }}" type="module"></script>
+<!-- Load the JS asset using Jekyll's baseurl -->
+<link rel="stylesheet" href="{{ '/pagefind/pagefind-component-ui.css' | relative_url }}" />
+</head>
+<body>
+  <!-- For dark mode wrap with <div data-pf-theme="dark"> -->
+  <div data-pf-theme="dark">
+    <pagefind-searchbox></pagefind-searchbox>
+  </div>
+</body>
 ```
+
+##### 2.3 For dark mode
 
 ```css
 @media (prefers-color-scheme: dark) {
@@ -193,12 +251,6 @@ Build the current host variant:
 
 ```sh
 make build
-```
-
-Run the fixture-based smoke test:
-
-```sh
-make smoke-test
 ```
 
 Build every supported variant:

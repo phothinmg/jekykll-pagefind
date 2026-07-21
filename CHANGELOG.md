@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+## [0.3.3]
 ### Changed
 
 - Linux gems now build separate `gnu` and `musl` RubyGems platform variants from the same static Pagefind binaries.
